@@ -10,7 +10,11 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.emergent.counttracker.jaqlzq"
+      "bundleIdentifier": "com.emergent.counttracker.jaqlzq",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Take product photos for inventory",
+        "NSPhotoLibraryUsageDescription": "Pick product photos from gallery"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +22,8 @@
         "backgroundColor": "#000000"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.emergent.counttracker.jaqlzq"
+      "package": "com.emergent.counttracker.jaqlzq",
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE"]
     },
     "web": {
       "bundler": "metro",
@@ -28,12 +33,19 @@
     "plugins": [
       "expo-router",
       [
+        "expo-image-picker",
+        {
+          "photosPermission": "Pick product photos from gallery",
+          "cameraPermission": "Take product photos for inventory"
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-image.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#000000"
+          "backgroundColor": "#FFFFFF"
         }
       ]
     ],

@@ -1,16 +1,35 @@
-import { Text, View, StyleSheet, Image } from "react-native";
+import { useRouter } from "expo-router";
+import { useEffect } from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
-const EXPO_PUBLIC_BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+import { hasPin, isSessionActive } from "@/src/store/auth";
+import { colors } from "@/src/theme";
 
 export default function Index() {
-  console.log(EXPO_PUBLIC_BACKEND_URL, "EXPO_PUBLIC_BACKEND_URL");
+  const router = useRouter();
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const pinSet = await hasPin();
+      const active = await isSessionActive();
+      if (!mounted) return;
+      if (!pinSet) {
+        router.replace("/setup");
+      } else if (active) {
+        router.replace("/inventory");
+      } else {
+        router.replace("/login");
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [router]);
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("../assets/images/app-image.png")}
-        style={styles.image}
-      />
+    <View style={styles.container} testID="index-splash">
+      <ActivityIndicator color={colors.onSurface} />
     </View>
   );
 }
@@ -18,13 +37,8 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0c0c0c",
+    backgroundColor: colors.surface,
     alignItems: "center",
     justifyContent: "center",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "contain",
   },
 });
