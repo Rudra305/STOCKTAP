@@ -1,0 +1,153 @@
+{
+  "app_name": "StockTap",
+  "personality": "5 Brutalist Mobile",
+  "personality_one_liner": "A raw, high-contrast, industrial counting tool built for speed and precision.",
+  "color": {
+    "surface": "#F4F4F4",
+    "onSurface": "#111111",
+    "surfaceSecondary": "#FFFFFF",
+    "onSurfaceSecondary": "#111111",
+    "surfaceTertiary": "#EAEAEA",
+    "onSurfaceTertiary": "#111111",
+    "surfaceInverse": "#111111",
+    "onSurfaceInverse": "#FFFFFF",
+    "brand": "#FF3B00",
+    "brandPrimary": "#FF3B00",
+    "onBrandPrimary": "#FFFFFF",
+    "brandSecondary": "#E63500",
+    "onBrandSecondary": "#FFFFFF",
+    "brandTertiary": "#FF3B0020",
+    "onBrandTertiary": "#FF3B00",
+    "success": "#00CC44",
+    "onSuccess": "#FFFFFF",
+    "warning": "#FFD600",
+    "onWarning": "#111111",
+    "error": "#FF0033",
+    "onError": "#FFFFFF",
+    "border": "#111111",
+    "borderStrong": "#111111",
+    "divider": "#111111"
+  },
+  "typography": {
+    "displayFontFamily": "Space Grotesk",
+    "textFontFamily": "Space Mono",
+    "scale": {
+      "sm": 12,
+      "base": 14,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24,
+      "3xl": 48
+    }
+  },
+  "spacing": {
+    "rule": "Rigid grids, hard alignment, visible structure. Cards fill horizontal space. 2pt borders define hierarchy.",
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48
+  },
+  "radius_tokens": {
+    "sm": 0,
+    "md": 0,
+    "lg": 0,
+    "pill": 0
+  },
+  "shadow_tier": "0",
+  "navigation": "bottom_tabs",
+  "icon_set": "Phosphor",
+  "glassmorphism": {
+    "enabled": false,
+    "do's": [],
+    "dont's": ["No glassmorphism, no blur, no soft shadows. Brutalism relies on solid colors and hard borders."]
+  },
+  "platform_libraries": {
+    "glass": {
+      "ios": "none",
+      "android": "none",
+      "low_end_android_fallback": "solid surfaceSecondary"
+    },
+    "image": "expo-image",
+    "blur": "none",
+    "bottom_sheet": "@gorhom/bottom-sheet",
+    "animation": "react-native-reanimated",
+    "gesture": "react-native-gesture-handler"
+  },
+  "haptics": {
+    "tap_increment": "impactLight",
+    "tap_decrement": "impactLight",
+    "reset_count": "impactMedium",
+    "save_product": "notificationSuccess",
+    "error_state": "notificationError",
+    "tab_press": "selection"
+  },
+  "screens": [
+    {
+      "name": "Login",
+      "purpose": "Secure entry for the store owner using a PIN.",
+      "states": {
+        "loading": "Centered mono spinner",
+        "empty": "N/A",
+        "error": "Red banner with hard 2pt border"
+      },
+      "layout": "Massive 'StockTap' logo/text at top. A 4-digit PIN entry with oversized square boxes (2pt borders). A hard-edged numeric keypad taking up the lower half of the screen. Mono typography for digits."
+    },
+    {
+      "name": "Inventory (Home)",
+      "purpose": "Glanceable product list where the stock count is the most prominent element.",
+      "states": {
+        "loading": "Skeleton of rows with hard outlines",
+        "empty": "Illustration/Photo of an empty shelf, massive 'NO STOCK' text, and a primary CTA to 'ADD PRODUCT'",
+        "error": "Readable mono text with a sharp retry button"
+      },
+      "layout": "Top: Search bar (rectangle, 2pt border, mono text). Below: Single-line horizontal scroller for category chips (sharp rectangles, selected state is inverted surfaceInverse). Below: Product list. Each row is a full-width rectangle with 2pt bottom border. Inside row: Left square product image (border-right), middle SKU (mono) & Name (Space Grotesk), right side has a massive stock number in Space Mono. If stock is low, the background of the number area flips to warning or brand primary. Tap row -> Opens Tap-to-Count Sheet."
+    },
+    {
+      "name": "Tap-to-Count (Bottom Sheet)",
+      "purpose": "Rapid, ergonomic stock updating with massive tap targets and haptic feedback.",
+      "states": {
+        "loading": "N/A",
+        "empty": "N/A",
+        "error": "N/A"
+      },
+      "layout": "Bottom sheet takes up 75% height. Top: Product name and current stock (massive 3xl Space Mono text). Middle: Manual entry text input (large, hard borders). Bottom: Two massive split buttons (Left: '-', Right: '+') spanning the full width, easy to hit with thumbs. Haptic trigger on every press. Reset button small and far away at top right of the sheet."
+    },
+    {
+      "name": "Add/Edit Product",
+      "purpose": "Form to add or edit inventory items.",
+      "states": {
+        "loading": "Spinner",
+        "empty": "N/A",
+        "error": "Red inline text"
+      },
+      "layout": "Single column form. Mono labels above sharp rectangular inputs. Top section for adding product photo (camera/gallery). Sticky Submit button anchored at bottom inside KeyboardAvoidingView. All borders 2pt."
+    }
+  ],
+  "images": {
+    "empty_inventory": {
+      "url": "https://images.unsplash.com/photo-1584294232067-c97f5d99eff3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDB8MHwxfHNlYXJjaHwyfHxyZXRhaWwlMjBpbnZlbnRvcnklMjBzaGVsZiUyMGVtcHR5fGVufDB8fHx8MTc4NDU1MzYxN3ww&ixlib=rb-4.1.0&q=85",
+      "alt": "empty retail shelves"
+    },
+    "mock_product_coffee": {
+      "url": "https://images.unsplash.com/photo-1675306408031-a9aad9f23308?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTJ8MHwxfHNlYXJjaHwxfHxjb2ZmZWUlMjBiZWFucyUyMGJhZyUyMHByb2R1Y3R8ZW58MHx8fHwxNzg0NTUzNjE2fDA&ixlib=rb-4.1.0&q=85",
+      "alt": "bag of coffee beans"
+    },
+    "mock_product_shirts": {
+      "url": "https://images.pexels.com/photos/31155535/pexels-photo-31155535.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "alt": "stacked blank t-shirts"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Implement a Brutalist design: NO rounded corners (radius 0 everywhere), 2pt hard solid borders on inputs, buttons, and cards.",
+    "Use Space Grotesk for headings/names and Space Mono for ALL numeric data (counts, SKUs, prices) to create a mechanical, tabular feel.",
+    "Do NOT use glassmorphism, blur, or soft shadows. Stick to solid colors and color flips (surfaceInverse) for active states.",
+    "On the Home list, emphasize the stock count number above all else. Apply a stark background color behind the number if the stock is below a threshold (low stock warning).",
+    "Category chips must be a single-line horizontal scroller using sharp-edged rectangles.",
+    "Implement the 'Tap-to-Count' interaction as a Gorhom Bottom Sheet. It should feature massive '+' and '-' buttons at the bottom for thumb ergonomics.",
+    "HAPTICS ARE CRITICAL: You must trigger a light haptic impact on every '+' or '-' press in the counter.",
+    "Ensure the primary CTA on forms (like Add Product) is sticky at the bottom."
+  ]
+}
