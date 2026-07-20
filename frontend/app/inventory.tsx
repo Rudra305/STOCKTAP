@@ -331,6 +331,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceTertiary,
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
   },
   thumbImage: { width: "100%", height: "100%" },
   thumbFallback: {
