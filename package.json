@@ -1,0 +1,17 @@
+{
+  "name": "stocktap",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start:backend": "node backend/server.js",
+    "start:frontend": "cd frontend && yarn start",
+    "build:frontend": "cd frontend && yarn build"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.5",
+    "uuid": "^11.1.0"
+  }
+}

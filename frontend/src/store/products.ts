@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-
 import { storage } from "@/src/utils/storage";
+import { apiClient } from "@/src/api/client";
 
 export type Product = {
   id: string;
@@ -14,7 +14,7 @@ export type Product = {
 };
 
 const PRODUCTS_KEY = "stocktap.products";
-const SEEDED_KEY = "stocktap.seeded.v1";
+const SEEDED_KEY = "stocktap.seeded.v2";
 
 const uid = () =>
   Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -66,7 +66,7 @@ async function readAll(): Promise<Product[]> {
   const raw = await storage.getItem<string>(PRODUCTS_KEY, "");
   if (!raw) return [];
   try {
-    const parsed = JSON.parse(raw as unknown as string);
+    const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
     return Array.isArray(parsed) ? (parsed as Product[]) : [];
   } catch {
     return [];
@@ -87,6 +87,12 @@ async function ensureSeeded(): Promise<void> {
 
 export async function listProducts(): Promise<Product[]> {
   await ensureSeeded();
+  // Try remote sync in background / first
+  const remote = await apiClient.fetchProducts();
+  if (remote && remote.length > 0) {
+    await writeAll(remote);
+    return remote;
+  }
   return readAll();
 }
 
@@ -126,20 +132,25 @@ export async function saveProduct(input: {
   };
   items.unshift(created);
   await writeAll(items);
+  // sync remote asynchronously
+  apiClient.createProduct(created).catch(() => {});
   return created;
 }
 
-export async function updateCount(id: string, next: number): Promise<Product | null> {
+export async function updateCount(id: string, next: number, reason?: string): Promise<Product | null> {
   const items = await readAll();
   const idx = items.findIndex((p) => p.id === id);
   if (idx < 0) return null;
+  const newCount = Math.max(0, Math.floor(next));
   const updated: Product = {
     ...items[idx],
-    count: Math.max(0, Math.floor(next)),
+    count: newCount,
     updatedAt: Date.now(),
   };
   items[idx] = updated;
   await writeAll(items);
+  // sync remote
+  apiClient.updateProductCount(id, newCount, reason).catch(() => {});
   return updated;
 }
 
@@ -147,6 +158,7 @@ export async function deleteProduct(id: string): Promise<void> {
   const items = await readAll();
   const next = items.filter((p) => p.id !== id);
   await writeAll(next);
+  apiClient.deleteProduct(id).catch(() => {});
 }
 
 export function useProducts() {
