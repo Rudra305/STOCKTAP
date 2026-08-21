@@ -5,6 +5,7 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -65,59 +66,64 @@ export default function SetupScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
       >
-        <View style={styles.header}>
-          <View style={styles.iconCircle}>
-            <Feather
-              name={step === "create" ? "key" : "check-circle"}
-              size={30}
-              color={colors.brand}
-            />
-          </View>
-          <Text style={styles.logo}>STOCKTAP</Text>
-          <Text style={styles.subtitle}>
-            {step === "create" ? "CREATE OWNER PASSCODE" : "CONFIRM PASSCODE"}
-          </Text>
-        </View>
-
-        {error ? (
-          <View style={styles.errorBanner} testID="setup-error">
-            <Feather name="alert-triangle" size={18} color={colors.onError} style={{ marginRight: 8 }} />
-            <Text style={styles.errorText}>{error}</Text>
-          </View>
-        ) : (
-          <View style={styles.instructionBanner}>
-            <Text style={styles.instructionText}>
-              {step === "create"
-                ? "Enter a 4-digit passcode for owner access"
-                : "Re-enter your passcode to verify"}
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <View style={styles.iconCircle}>
+              <Feather
+                name={step === "create" ? "key" : "check-circle"}
+                size={26}
+                color={colors.brand}
+              />
+            </View>
+            <Text style={styles.logo}>STOCKTAP</Text>
+            <Text style={styles.subtitle}>
+              {step === "create" ? "CREATE OWNER PASSCODE" : "CONFIRM PASSCODE"}
             </Text>
           </View>
-        )}
 
-        <View style={styles.body}>
-          <PinKeypad
-            value={value}
-            onChange={onChange}
-            isError={!!error}
-            testIDPrefix={step === "create" ? "setup-create" : "setup-confirm"}
-          />
-        </View>
+          {error ? (
+            <View style={styles.errorBanner} testID="setup-error">
+              <Feather name="alert-triangle" size={16} color={colors.onError} style={{ marginRight: 6 }} />
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          ) : (
+            <View style={styles.instructionBanner}>
+              <Text style={styles.instructionText}>
+                {step === "create"
+                  ? "Enter a 4-digit passcode for owner access"
+                  : "Re-enter your passcode to verify"}
+              </Text>
+            </View>
+          )}
 
-        {step === "confirm" && !saving && (
-          <Pressable
-            testID="setup-restart-button"
-            style={styles.restart}
-            onPress={() => {
-              setFirst("");
-              setSecond("");
-              setStep("create");
-              setError(null);
-            }}
-          >
-            <Feather name="refresh-cw" size={14} color={colors.brand} style={{ marginRight: 6 }} />
-            <Text style={styles.restartText}>START OVER</Text>
-          </Pressable>
-        )}
+          <View style={styles.body}>
+            <PinKeypad
+              value={value}
+              onChange={onChange}
+              isError={!!error}
+              testIDPrefix={step === "create" ? "setup-create" : "setup-confirm"}
+            />
+          </View>
+
+          {step === "confirm" && !saving && (
+            <Pressable
+              testID="setup-restart-button"
+              style={styles.restart}
+              onPress={() => {
+                setFirst("");
+                setSecond("");
+                setStep("create");
+                setError(null);
+              }}
+            >
+              <Feather name="refresh-cw" size={14} color={colors.brand} style={{ marginRight: 6 }} />
+              <Text style={styles.restartText}>START OVER</Text>
+            </Pressable>
+          )}
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -125,53 +131,56 @@ export default function SetupScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.surface },
-  container: { flex: 1, paddingHorizontal: spacing.lg },
+  container: { flex: 1 },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: spacing.md,
+    paddingTop: Platform.OS === "web" ? spacing.md : spacing.lg,
+    paddingBottom: spacing.xl,
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   header: {
-    paddingTop: spacing.xl,
-    paddingBottom: spacing.sm,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.xs,
     alignItems: "center",
   },
   iconCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: 54,
+    height: 54,
+    borderRadius: 27,
     backgroundColor: colors.surfaceSecondary,
     borderWidth: BORDER,
     borderColor: colors.border,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: spacing.md,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
+    marginBottom: spacing.xs,
   },
   logo: {
     fontFamily: fontDisplay,
-    fontSize: type.xxxl,
+    fontSize: type.xxl,
     fontWeight: "900",
-    letterSpacing: -2,
+    letterSpacing: -1,
     color: colors.onSurface,
   },
   subtitle: {
     fontFamily: fontMono,
-    fontSize: type.sm,
+    fontSize: 11,
     fontWeight: "800",
     letterSpacing: 2,
-    marginTop: spacing.xs,
+    marginTop: 2,
     color: colors.muted,
   },
   instructionBanner: {
     alignItems: "center",
-    marginVertical: spacing.md,
+    marginVertical: spacing.xs,
   },
   instructionText: {
     fontFamily: fontMono,
-    fontSize: type.sm,
+    fontSize: 12,
     color: colors.muted,
     fontWeight: "600",
-    letterSpacing: 1,
+    letterSpacing: 0.5,
   },
   errorBanner: {
     flexDirection: "row",
@@ -180,31 +189,31 @@ const styles = StyleSheet.create({
     borderWidth: BORDER,
     borderColor: colors.error,
     backgroundColor: colors.error,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    borderRadius: 12,
-    marginVertical: spacing.sm,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderRadius: 10,
+    marginVertical: spacing.xs,
   },
   errorText: {
     fontFamily: fontMono,
     color: colors.onError,
     fontWeight: "700",
-    fontSize: type.sm,
+    fontSize: 12,
     letterSpacing: 0.5,
   },
-  body: { flex: 1, justifyContent: "center", alignItems: "center" },
+  body: { width: "100%", maxWidth: 360, alignItems: "center", marginTop: spacing.xs },
   restart: {
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "center",
-    paddingVertical: spacing.md,
-    marginBottom: spacing.lg,
+    paddingVertical: spacing.sm,
+    marginTop: spacing.sm,
   },
   restartText: {
     fontFamily: fontMono,
-    fontSize: type.sm,
+    fontSize: 12,
     fontWeight: "800",
-    letterSpacing: 2,
+    letterSpacing: 1.5,
     color: colors.brand,
   },
 });
