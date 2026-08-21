@@ -1,10 +1,22 @@
 import { Product } from "@/src/store/products";
 
 const getBaseUrl = () => {
-  if (process.env.EXPO_PUBLIC_API_URL) return process.env.EXPO_PUBLIC_API_URL;
-  if (typeof window !== "undefined" && window.location.hostname !== "localhost") {
+  // 1. Explicit custom API URL (e.g., Vercel deployment URL)
+  if (process.env.EXPO_PUBLIC_API_URL && !process.env.EXPO_PUBLIC_API_URL.includes("localhost")) {
+    return process.env.EXPO_PUBLIC_API_URL;
+  }
+  
+  // 2. Web browser on production domain (Vercel) -> use relative /api
+  if (typeof window !== "undefined" && window.location?.hostname && window.location.hostname !== "localhost") {
     return "/api";
   }
+
+  // 3. Fallback to EXPO_PUBLIC_API_URL if provided
+  if (process.env.EXPO_PUBLIC_API_URL) {
+    return process.env.EXPO_PUBLIC_API_URL;
+  }
+
+  // 4. Local dev server
   return "http://localhost:8000/api";
 };
 
