@@ -5,11 +5,13 @@ const { v4: uuidv4 } = require('uuid');
 const dns = require('dns');
 require('dotenv').config();
 
-// Ensure reliable DNS resolution for MongoDB Atlas SRV records on Windows
-try {
-  dns.setServers(['8.8.8.8', '8.8.4.4']);
-} catch (e) {
-  console.warn('Custom DNS set warning:', e.message);
+// Ensure reliable DNS resolution for MongoDB Atlas SRV records on Windows only
+if (process.platform === 'win32') {
+  try {
+    dns.setServers(['8.8.8.8', '8.8.4.4']);
+  } catch (e) {
+    console.warn('Custom DNS set warning:', e.message);
+  }
 }
 
 const app = express();
@@ -19,6 +21,46 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/stocktap_d
 // Middleware
 app.use(cors({ origin: '*' }));
 app.use(express.json());
+
+// Serverless-aware Mongo Connection Cache
+let cachedConn = null;
+
+async function connectDB() {
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection;
+  }
+
+  if (cachedConn) {
+    await cachedConn;
+    return mongoose.connection;
+  }
+
+  cachedConn = mongoose.connect(MONGO_URI, {
+    serverSelectionTimeoutMS: 5000,
+  }).then(async (m) => {
+    console.log(' Connected to MongoDB Atlas Successfully');
+    await seedInitialData();
+    return m;
+  }).catch((err) => {
+    cachedConn = null;
+    console.error(' MongoDB Atlas Connection Error:', err.message);
+    throw err;
+  });
+
+  await cachedConn;
+  return mongoose.connection;
+}
+
+// Middleware to ensure DB is connected on every incoming API request
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+  } catch (err) {
+    console.error('Database connection middleware warning:', err.message);
+  }
+  next();
+});
+
 
 // -------------------------------------------------------------
 // MongoDB Schemas & Models
@@ -98,17 +140,7 @@ async function seedInitialData() {
   }
 }
 
-// -------------------------------------------------------------
-// Connect to MongoDB
-// -------------------------------------------------------------
-mongoose.connect(MONGO_URI)
-  .then(async () => {
-    console.log(' Connected to MongoDB Atlas Successfully');
-    await seedInitialData();
-  })
-  .catch((err) => {
-    console.error(' MongoDB Atlas Connection Error:', err);
-  });
+
 
 // -------------------------------------------------------------
 // API Routes
