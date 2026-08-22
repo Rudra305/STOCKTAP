@@ -1,46 +1,136 @@
 # 📦 StockTap — Tap-to-Count Inventory Management System
 
-Full-stack inventory management web application built with **React Native / Expo Web**, **Node.js Express API**, and **MongoDB Atlas**.
+> **A fast, touch-optimized inventory management and audit application** built with **React Native / Expo (Web & Mobile)**, **Node.js Express REST API**, and **MongoDB Atlas**. Features tactile tap-to-count inventory sheet controls, secure 4-digit Owner Passcode locking, low-stock alerts, and activity audit logging.
+
+[![Expo SDK](https://img.shields.io/badge/Expo-SDK%2054-blue?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev)
+[![React Native](https://img.shields.io/badge/React%20Native-0.81-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://reactnative.dev)
+[![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/cloud/atlas)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
 ---
 
-## 🛠️ Architecture & Setup
+## 📖 About StockTap
 
-* **Frontend**: Expo Web (`expo export --platform web`) with Zustand, Lucide icons, & responsive UI.
-* **Backend**: Express API running on Node.js with Mongoose models (`Product`, `AuditLog`).
-* **Database**: MongoDB Atlas (`stocktap_db` database).
-* **Deployment**: Production ready for **Vercel** serverless web hosting.
+**StockTap** eliminates the hassle of tracking inventory with manual pen-and-paper or clunky spreadsheets. Designed with a mobile-first, tap-to-count philosophy, StockTap empowers store owners and inventory managers to rapidly adjust stock levels on the fly, lock sensitive store settings behind an Owner Passcode, and maintain full transparency with automated audit logging.
+
+### 🌟 Key Features
+
+- 🔢 **Tactile Tap-to-Count Sheet**: Quick-count bottom sheet with big touch targets (`+1`, `-1`, manual override) and haptic feedback.
+- 🔐 **Owner Passcode Lock**: 4-digit PIN security (`setup` and `login` screens) protecting owner-only actions and inventory modifications.
+- ⚠️ **Low-Stock Detection**: Automatic visual warnings and badge alerts when items fall below custom minimum thresholds.
+- 🔍 **Real-Time Search & Category Filtering**: Instant product lookup with interactive category chips.
+- 📋 **Product Management**: Complete CRUD operations (create, update, delete, SKU, category, stock threshold, photo URL).
+- 📜 **Audit Trail & Activity Logs**: Track every stock increment, decrement, and item edit in MongoDB.
+- 🌐 **Cross-Platform**: Runs seamlessly on Expo Web, iOS, and Android.
 
 ---
 
-## ⚡ Quick Start
+## 🛠️ Architecture & Tech Stack
 
-### 1. Backend Development Server
+```text
+STOCKTAP/
+├── backend/                  # Node.js & Express REST API
+│   ├── models/               # Mongoose schemas (Product, AuditLog)
+│   ├── routes/               # Express API routes (/api/products, /api/logs)
+│   ├── server.js             # API server entrypoint & MongoDB connection
+│   └── package.json
+├── frontend/                 # Expo (SDK 54) + React Native Web frontend
+│   ├── app/                  # Expo Router pages (index, setup, login, inventory, product-form)
+│   ├── src/                  # Components (PinKeypad, CountSheet), Store (auth, inventory), Theme
+│   ├── .eas/workflows/       # EAS Workflows auto-deployment configuration
+│   ├── eas.json              # EAS build profile setup
+│   ├── eslint.config.js      # ESLint configuration
+│   └── package.json
+├── vercel.json               # Vercel serverless deployment routing configuration
+└── README.md
+```
+
+### Stack Components
+* **Frontend**: Expo SDK 54, Expo Router v4, React Native 0.81, Zustand state management, Expo Haptics, Feather Vector Icons.
+* **Backend**: Node.js, Express.js, Mongoose ODM, Cors, Dotenv.
+* **Database**: MongoDB Atlas cloud cluster (`stocktap_db`).
+* **CI/CD & Deployment**: EAS Workflows for Mobile builds; Vercel for Web deployment.
+
+---
+
+## ⚡ Quick Start Guide
+
+### Prerequisites
+- **Node.js**: `v18.0.0` or higher (`node -v`)
+- **Yarn** or **npm**
+
+---
+
+### 1. Root Convenience Scripts
+
+You can run both frontend and backend directly from the workspace root:
+
+```bash
+# Start backend server
+yarn start:backend
+
+# Start frontend Expo dev server
+yarn start:frontend
+
+# Export frontend production build
+yarn build:frontend
+```
+
+---
+
+### 2. Manual Backend Setup
+
 ```bash
 cd backend
 npm install
-npm start
-# Server runs at http://localhost:8000
-```
 
-### 2. Frontend Development Server
-```bash
-cd frontend
-yarn install
-yarn start
-# Starts Expo dev server
+# Create environment configuration
+cp .env.example .env
+
+# Start Node.js Express Server (Port 8000)
+npm start
 ```
 
 ---
 
-## ☁️ Vercel & Production Build Setup
+### 3. Manual Frontend Setup
 
-1. **Root Vercel Configuration**: [`vercel.json`](file:///c:/Ashutosh/Projects/Git/STOCKTAP/vercel.json) configured for single-command Vercel deployment.
-2. **Environment Variables on Vercel**:
-   * `MONGO_URI`: `mongodb+srv://ashutoshbalsaraf_db_user:<password>@cluster0.ede0mx8.mongodb.net/stocktap_db?retryWrites=true&w=majority&appName=Cluster0`
-   * `EXPO_PUBLIC_API_URL`: `/api`
-3. **Production Export**:
-   ```bash
-   cd frontend
-   npx expo export --platform web
-   ```
+```bash
+cd frontend
+yarn install
+
+# Start Expo Development Server
+yarn start
+```
+
+---
+
+## 🧪 Quality Assurance & Linters
+
+StockTap maintains strict code quality and type safety:
+
+| Command | Description |
+| :--- | :--- |
+| `npm run lint` | Runs ESLint (`expo lint`) to inspect code quality |
+| `npx tsc --noEmit` | Validates TypeScript type safety without compiling |
+| `npx expo-doctor` | Verifies Expo SDK dependency compatibility (18/18 checks) |
+
+---
+
+## ☁️ CI/CD & Deployment Setup
+
+### 📱 EAS Auto-Deployment (Expo Cloud)
+EAS Workflows are configured under [`frontend/.eas/workflows/create-production-builds.yml`](file:///c:/Ashutosh/Projects/Git/STOCKTAP/frontend/.eas/workflows/create-production-builds.yml).
+* **Triggers**: Pushes to `main` branch automatically build Android Preview APKs on Expo Cloud.
+
+### 🌐 Vercel Web Deployment
+1. Root [`vercel.json`](file:///c:/Ashutosh/Projects/Git/STOCKTAP/vercel.json) routes API requests to `/backend/server.js` and serves Expo Web assets.
+2. **Environment Variables**:
+   - `MONGO_URI`: MongoDB Atlas connection string.
+   - `EXPO_PUBLIC_API_URL`: `/api`
+
+---
+
+## 📄 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
