@@ -2,11 +2,14 @@
 
 > **A fast, touch-optimized inventory management and audit application** built with **React Native / Expo (Web & Mobile)**, **Node.js Express REST API**, and **MongoDB Atlas**. Features tactile tap-to-count inventory sheet controls, secure 4-digit Owner Passcode locking, low-stock alerts, and activity audit logging.
 
+[![Live Web App](https://img.shields.io/badge/Live_Web_App-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://stocktapmerlin.vercel.app)
 [![Expo SDK](https://img.shields.io/badge/Expo-SDK%2054-blue?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev)
 [![React Native](https://img.shields.io/badge/React%20Native-0.81-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://reactnative.dev)
 [![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/cloud/atlas)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+
+🔗 **Live Production Web App**: [https://stocktapmerlin.vercel.app](https://stocktapmerlin.vercel.app)
 
 ---
 
