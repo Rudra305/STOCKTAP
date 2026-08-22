@@ -82,22 +82,21 @@ export default function SetupScreen() {
             <Text style={styles.subtitle}>
               {step === "create" ? "CREATE OWNER PASSCODE" : "CONFIRM PASSCODE"}
             </Text>
+            {error ? (
+              <View style={styles.errorBanner} testID="setup-error">
+                <Feather name="alert-triangle" size={16} color={colors.onError} style={{ marginRight: 6 }} />
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            ) : (
+              <View style={styles.instructionBanner}>
+                <Text style={styles.instructionText}>
+                  {step === "create"
+                    ? "Enter a 4-digit passcode for owner access"
+                    : "Re-enter your passcode to verify"}
+                </Text>
+              </View>
+            )}
           </View>
-
-          {error ? (
-            <View style={styles.errorBanner} testID="setup-error">
-              <Feather name="alert-triangle" size={16} color={colors.onError} style={{ marginRight: 6 }} />
-              <Text style={styles.errorText}>{error}</Text>
-            </View>
-          ) : (
-            <View style={styles.instructionBanner}>
-              <Text style={styles.instructionText}>
-                {step === "create"
-                  ? "Enter a 4-digit passcode for owner access"
-                  : "Re-enter your passcode to verify"}
-              </Text>
-            </View>
-          )}
 
           <View style={styles.body}>
             <PinKeypad
@@ -173,7 +172,8 @@ const styles = StyleSheet.create({
   },
   instructionBanner: {
     alignItems: "center",
-    marginVertical: spacing.xs,
+    marginTop: spacing.md,
+    marginBottom: spacing.xs,
   },
   instructionText: {
     fontFamily: fontMono,
@@ -192,7 +192,8 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.md,
     borderRadius: 10,
-    marginVertical: spacing.xs,
+    marginTop: spacing.md,
+    marginBottom: spacing.xs,
   },
   errorText: {
     fontFamily: fontMono,

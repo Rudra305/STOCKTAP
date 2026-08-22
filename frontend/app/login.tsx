@@ -60,18 +60,17 @@ export default function LoginScreen() {
             </View>
             <Text style={styles.logo}>STOCKTAP</Text>
             <Text style={styles.subtitle}>OWNER PASSCODE LOCK</Text>
+            {error ? (
+              <View style={styles.errorBanner} testID="login-error">
+                <Feather name="alert-circle" size={16} color={colors.onError} style={{ marginRight: 6 }} />
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            ) : (
+              <View style={styles.instructionBanner}>
+                <Text style={styles.instructionText}>Enter a 4-digit passcode for owner access</Text>
+              </View>
+            )}
           </View>
-
-          {error ? (
-            <View style={styles.errorBanner} testID="login-error">
-              <Feather name="alert-circle" size={16} color={colors.onError} style={{ marginRight: 6 }} />
-              <Text style={styles.errorText}>{error}</Text>
-            </View>
-          ) : (
-            <View style={styles.instructionBanner}>
-              <Text style={styles.instructionText}>Enter a 4-digit passcode for owner access</Text>
-            </View>
-          )}
 
           <View style={styles.body}>
             <PinKeypad
@@ -146,7 +145,8 @@ const styles = StyleSheet.create({
   },
   instructionBanner: {
     alignItems: "center",
-    marginVertical: spacing.xs,
+    marginTop: spacing.md,
+    marginBottom: spacing.xs,
   },
   instructionText: {
     fontFamily: fontMono,
@@ -165,7 +165,8 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.md,
     borderRadius: 10,
-    marginVertical: spacing.xs,
+    marginTop: spacing.md,
+    marginBottom: spacing.xs,
   },
   errorText: {
     fontFamily: fontMono,
